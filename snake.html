@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Snake Game</title>
+</head>
+<body>
+	<canvas id="main" width="400" height="400"></canvas>
+
+	<script type="text/javascript">
+		let posX = 10;
+		let posY = 10;
+		let velX = 0;
+		let velY = 0;
+		let grid = 20;
+		let foodX = 15;
+		let foodY = 15;
+		snake = [];
+		tail = 5;
+
+		window.onload = () => {
+			canvas = document.getElementById('main');
+			ctx = canvas.getContext('2d');
+
+			document.addEventListener("keydown", (e) => {
+				switch(e.keyCode) {
+					case 37:
+						velX = -1;
+						velY = 0;
+						break;
+					case 38:
+						velX = 0;
+						velY = -1;
+						break;
+					case 39:
+						velX = 1;
+						velY = 0;
+						break;
+					case 40:
+						velX = 0;
+						velY = 1;
+						break;
+				}
+			});
+			setInterval(game, 1000/15);
+		}
+
+		function game() {
+			posX += velX;
+			posY += velY;
+
+			if(posX < 0) {
+				posX = grid;
+			} else if(posX > grid) {
+				posX = 0;
+			} else if(posY < 0) {
+				posY = grid;
+			} else if(posY > grid) {
+				posY = 0;
+			}
+
+			ctx.fillStyle = '#9AFF94';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.fillStyle = '#000';
+			for(let i = 0; i < snake.length; i++) {
+				ctx.fillRect(snake[i].x * grid, snake[i].y * grid, grid - 1, grid - 1);
+				if(snake[i].x === posX && snake[i].y === posY) {
+					tail = 5;
+				}
+			}
+
+			snake.push({x: posX, y: posY});
+			while(snake.length > tail) {
+				snake.shift();
+			}
+
+			ctx.fillStyle = '#F00'
+			ctx.fillRect(foodX * grid, foodY * grid, grid - 1, grid - 1);
+
+			if(posX === foodX && posY === foodY) {
+				tail++;
+				foodX = Math.floor(Math.random() * grid);
+				foodY = Math.floor(Math.random() * grid);
+			}
+		}
+	</script>
+</body>
+</html>
